@@ -1,0 +1,10 @@
+@startuml
+
+actor "User"
+
+"User"-> "Device service": send statistics with api token
+"Device service"-> "Analytics consumer": send statistics message via kafka
+"User"<- "Device service": 200
+"Analytics consumer"-> "DB stats": write statistics
+
+@enduml

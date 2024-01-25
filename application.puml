@@ -1,0 +1,21 @@
+@startuml
+
+:Admin: as A
+:User: as U
+
+(Authorization service) as AS
+(user and apps DB) as UDB
+(Internal service) as IS
+(Device service) as DS
+(DB stats) as SDB
+(Analytics consumer) as AC
+
+A <----> AS
+AS --> UDB
+A ----> IS
+IS --> UDB
+U ---> DS
+IS --> SDB
+AC --> SDB
+DS --> AC
+@enduml

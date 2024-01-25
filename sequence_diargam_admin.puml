@@ -1,0 +1,16 @@
+@startuml
+
+actor "Admin"
+
+"Admin"-> "Authorization service": Sign up
+"Authorization service"-> "User and apps DB": save new client
+"Admin"<- "Authorization service": jwt-token
+"Admin"-> "Internal service": create app with jwt-token
+"Internal service"-> "User and apps DB": save new app
+"Admin"<- "Internal service": api-token
+"Admin"-> "Internal service": /<app_name>/<event_name> with jwt-token
+"Internal service"-> "DB stats": select statistics
+"Internal service"<- "DB stats": return statistics
+"Admin"<- "Internal service": statistics
+
+@enduml
