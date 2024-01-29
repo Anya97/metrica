@@ -3,19 +3,27 @@
 :Admin: as A
 :User: as U
 
-(Authorization service) as AS
-(user and apps DB) as UDB
-(Internal service) as IS
+(User service) as US
+(Application service) as AS
+(user DB) as UDB
+(application DB) as ADB
+(Analytics API) as AA
 (Device service) as DS
-(DB stats) as SDB
-(Analytics consumer) as AC
+(Kafka) as K
+(Analytics Consumer) as AC
+(analytics DB) as ANDB
 
-A <----> AS
-AS --> UDB
-A ----> IS
-IS --> UDB
-U ---> DS
-IS --> SDB
-AC --> SDB
-DS --> AC
+
+A <--> US
+US --> UDB
+A --> AS
+AS --> ADB
+A --> AA
+U <--> US
+U --> DS
+DS --> K
+K --> AC
+AC --> ANDB
+ANDB --> AA
+
 @enduml
