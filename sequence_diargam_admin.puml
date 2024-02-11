@@ -2,15 +2,17 @@
 
 actor "Admin"
 
-"Admin"-> "Authorization service": Sign up
-"Authorization service"-> "User and apps DB": save new client
-"Admin"<- "Authorization service": jwt-token
-"Admin"-> "Internal service": create app with jwt-token
-"Internal service"-> "User and apps DB": save new app
-"Admin"<- "Internal service": api-token
-"Admin"-> "Internal service": /<app_name>/<event_name> with jwt-token
-"Internal service"-> "DB stats": select statistics
-"Internal service"<- "DB stats": return statistics
-"Admin"<- "Internal service": statistics
+"Admin"-> "User service": save new client
+"User service"-> "User DB": save new user
+"Admin"<- "User service": jwt-token
+"Admin"-> "Application service": create app
+"Application service"-> "Application DB": create app
+"Admin" -> "Analytics API": /<app_uuid> with jwt-token
+"Analytics API" -> "Admin": statistics
+"Analytics API" <- "Analytics DB": return statistics
+"Analytics API" -> "Analytics DB": select statistics
+"Analytics DB" <- "Analytics consumer": save statistics to DB
+"Analytics consumer" <- "Kafka": consume from Kafka
+"Kafka" <- "Device service": produce to Kafka
 
 @enduml

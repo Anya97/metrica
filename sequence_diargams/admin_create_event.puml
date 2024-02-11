@@ -1,0 +1,9 @@
+@startuml
+
+actor "Admin"
+
+"Admin" -> "Application service": request create event /<app_uuid> with jwt-token
+"Application service" -> "Application DB": create event for app_uuid
+"Application service" -> "Admin": response 200
+
+@enduml

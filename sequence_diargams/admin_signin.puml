@@ -1,0 +1,10 @@
+@startuml
+
+actor "Admin"
+
+"Admin" -> "User service": request with user credentials
+"User service" -> "User DB": select user data
+"User service" <- "User DB": return user data
+"Admin" <- "User service": response with new generated jwt-token
+
+@enduml

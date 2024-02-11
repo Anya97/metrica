@@ -2,9 +2,12 @@
 
 actor "User"
 
-"User"-> "Device service": send statistics with api token
-"Device service"-> "Analytics consumer": send statistics message via kafka
-"User"<- "Device service": 200
-"Analytics consumer"-> "DB stats": write statistics
+"User" -> "User service": Sign up
+"User service" -> "User": Api token
+"User service" -> "User DB": Save user to DB
+"User" -> "Device service": Api token
+"Device service" -> "Kafka": produce to Kafka
+"Kafka" -> "Analytics consumer": consume from Kafka
+"Analytics consumer" -> "Analytics DB": save statistics to DB
 
 @enduml

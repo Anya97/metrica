@@ -1,0 +1,10 @@
+@startuml
+
+actor "Admin"
+
+"Admin" -> "Analytics API": /<app_uuid> with jwt-token
+"Analytics API" -> "Analytics DB": select statistics
+"Analytics API" <- "Analytics DB": return statistics
+"Analytics API" -> "Admin": response with statistics
+
+@enduml

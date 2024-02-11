@@ -1,0 +1,9 @@
+@startuml
+
+actor "Admin"
+
+"Admin"-> "User service": request to create new client
+"User service"-> "User DB": save new user
+"Admin"<- "User service": response with generated jwt-token
+
+@enduml

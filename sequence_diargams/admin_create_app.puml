@@ -1,0 +1,9 @@
+@startuml
+
+actor "Admin"
+
+"Admin" -> "Application service": request to create app with jwt-token
+"Application service" -> "Application DB": create app with generated app_uuid
+"Application service" -> "Admin": response with app_uuid and api token
+
+@enduml

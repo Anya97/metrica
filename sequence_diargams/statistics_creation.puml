@@ -1,0 +1,11 @@
+@startuml
+
+actor "User"
+
+"User" -> "Device service": send user statistics event with api token
+"Device service" -> "Kafka": asynchronous produce statistics event to Kafka
+"User" <- "Device service": response 200
+"Analytics consumer" <- "Kafka": consume from Kafka
+"Analytics consumer" -> "Analytics DB": save statistics to DB
+
+@enduml

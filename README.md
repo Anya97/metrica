@@ -10,7 +10,6 @@
 
 ```json
 {
-  "id": 1,
   "name": "theUser",
   "surname": "James",
   "email": "john@email.com",
