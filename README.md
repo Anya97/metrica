@@ -1,6 +1,10 @@
-# Методы API
+# Metrica
 
-## Authorization service
+Cервис сбора статистики из мобильного приложения.
+
+## Методы API
+
+### User service
 
 > /auth
 
@@ -47,38 +51,40 @@ Response
 }
 ```
 
-В теле передается email и пароль для авторизации. При успешной авторизации, возвращается код 200 и токен авторизации в хэдере.
-Если такого пользователя нет, то возвращаем 401. Для регистрации нужно ввести email, пароль, телефон, имя и фамилию. 
+-  **GET** рефреш токена /refresh
 
-## Internal service
+Response
 
-> /app/create
+`HTTP/1.0 200 OK`
+```json
+{
+ "jwt_token": "token"
+}
+```
 
-- **POST** создание приложения
+> /<app_code> 
+
+Response
+
+`HTTP/1.0 200 OK`
+```json
+{
+ "api_token": "token", 
+ "app_code": "code"
+}
+```
+
+### Application service
+
+> /app
+
+- **POST** создание приложения /create
 
 **Request body**
 
 ```json
 {
- "app_name": "electronic-shop",
- "events": [
-  {
-    "name": "number_of_openings"
-  },
-  {
-    "name": "number_of_product_views", 
-    "attrs": [{"product_name": "string"}]
-  },
-  {
-    "name": "number_of_adding_products_in_cart",
-    "attrs":
-     [{"product_name": "string"}, {"quantity": "int"}]
-  },
-  {
-    "name": "number_of_product_purchases",
-    "attrs": [{"product_name": "string"}, {"quantity": "int"}]
-  }
- ]
+ "app_name": "electronic-shop"
 }
 ```
 
@@ -87,24 +93,58 @@ Response
 `HTTP/1.0 200 OK`
 ```json
 {
- "api_token": "token"
+ "api_token": "token", 
+ "app_code": "app_code"
 }
 ```
-
-В теле запроса передается название приложения, разрешенные ивенты, аттрибуты и возвращается api token созданного приложения.
 
 - код 200 - приложение успешно создано
 - код 403 - пользователь не авторизован
 - код 400 - такое приложение уже создано у данного пользователя.
 
+- **POST** создание ивента  /create_event/<app_code>
 
-> /<app_name>/<event_name>
+**Request body**
 
--  **GET** получение статистики
+```json
+{
+  "events": [
+    {
+      "name": "number of product views",
+      "description": "description",
+      "attrs": [
+        {
+        "name": "product_name",
+        "type": "string"
+        },
+        {
+        "name": "quantity",
+        "type": "integer"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Response
+
+`HTTP/1.0 200 OK`
+```json
+{
+ "event_code": "event-code", 
+ "app_code": "code"
+}
+```
+
+### Analytics API
+> /<app_code>
+
+-  **GET** получение статистики /<event_code>
 
 Пример:
 
-/electronic-shop/number_of_adding_products_in_cart
+/electronic-shop-uuid/number_of_product_views-uuid
 
 Response
 
@@ -112,7 +152,7 @@ Response
 ```json
 [
     {
-      "user_id": 1,
+      "user_code": "user_code_uuid",
       "resistor": 11,
       "diode": 235,
       "transistor": 14
@@ -127,15 +167,26 @@ Response
 
 Сервис для продюсинга статистики. Он будет производить и писать сообщения в kafka. Ручка пишет в один топик с одной партицией.
 
-> /<app_name>
+> /<app_code>
 
--  **POST** сбор статистики
+Название топика "analytics-data.raw"
+
+Пример сообщения:
 
 ```json
 {
-  "user_id": 1,
+  "user_code": "user_code_uuid",
   "event_name": "number_of_adding_products_in_cart",
-  "attrs": {"product_name": "diode", "quantity": 2}
+  "attrs": [
+    {
+      "name": "product_name",
+      "type": "string"
+    },
+    {
+      "name": "quantity",
+      "type": "integer"
+    }
+  ]
 }
 ```
 
@@ -145,4 +196,4 @@ Response
 
 ## Analytics consumer
 
-Слушает топик и пишет в аналитическую базу из protobuf.
+Слушает топик "analytics-data.raw" и пишет данные в аналитическую базу.
