@@ -111,7 +111,6 @@ Response
   "events": [
     {
       "name": "number of product views",
-      "description": "description",
       "attrs": [
         {
         "name": "product_name",

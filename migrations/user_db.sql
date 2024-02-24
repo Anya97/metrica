@@ -10,5 +10,5 @@ CREATE TABLE users (
     updated_at TIMESTAMP NOT NULL default now()
 );
 
-CREATE unique index email_idx ON users (email);
-CREATE INDEX user_id_idx ON users (user_id);
+CREATE unique index users_email_idx ON users (email);
+CREATE INDEX users_user_id_idx ON users (user_id);
